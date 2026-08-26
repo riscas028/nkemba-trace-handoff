@@ -1,0 +1,16 @@
+{
+  "trace_verification": {
+    "status": "VERIFIED",
+    "source_id": "trace-example-001",
+    "verifier": "external-trace-verifier"
+  },
+  "action_evidence": {
+    "status": "ACCEPTED_RECEIPT",
+    "source_id": "receipt-example-001"
+  },
+  "outcome_evidence": {
+    "status": "VERIFIED_EXTERNAL_CLAIM",
+    "source_id": "outcome-example-001",
+    "scope": "CONTROLLER_OBSERVED_STATE"
+  }
+}
