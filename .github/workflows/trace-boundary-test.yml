@@ -1,0 +1,35 @@
+name: TRACE boundary validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trace-signed-vector:
+    name: Official TRACE v0.2 signed-vector boundary test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check cryptography
+
+      - name: Run N'KEMBA TRACE signed-vector test
+        run: python tests/test_trace_v02_official_vector.py
+
+      - name: Run handoff proof-boundary self-test
+        run: python test_handoff.py
