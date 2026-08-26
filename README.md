@@ -17,7 +17,7 @@ The handoff deliberately separates technical evidence from later institutional f
 ## What it does not claim
 
 - It does not issue TRACE Trust Records.
-- It does not independently verify raw TRACE JWT/CWT/COSE envelopes.
+- It does not independently verify raw TRACE JWT/CWT/COSE envelopes in the handoff component.
 - It does not claim TRACE conformance or certification.
 - It does not infer physical completion from controller acceptance.
 - It does not infer human approval, institutional adoption, legal effect, or business effect without separate evidence.
@@ -29,9 +29,39 @@ Python 3.11+:
 
 ```bash
 python handoff.py example-input.json output.json
+python test_handoff.py
 ```
 
 The example input is synthetic and contains no private or customer data.
+
+## Reproducible TRACE v0.2 signed-vector boundary test
+
+A separate external-safe test exercises the public TRACE v0.2 signed UTF-16 key-order test vector (`03-utf16-key-order.json`). It verifies the Ed25519 signature using RFC 8785-compatible UTF-16 property ordering, confirms that a one-field tamper invalidates the signature, and then checks that N’KEMBA does not promote technical integrity into unsupported institutional claims.
+
+Install the test-only dependency and run:
+
+```bash
+python -m pip install cryptography
+python tests/test_trace_v02_official_vector.py
+```
+
+Expected result:
+
+```text
+PASS NKEMBA-TRACE-SIGNED-VECTOR-001
+```
+
+The test deliberately preserves these boundaries:
+
+- signed technical record integrity can be proved;
+- a `software-only` runtime is not treated as hardware attestation;
+- physical completion remains `NOT_PROVED`;
+- human validation remains `NOT_PROVED`;
+- institutional adoption remains `NOT_PROVED`;
+- legal effect remains `NOT_PROVED`;
+- business effect remains `NOT_PROVED`.
+
+This is an interoperability/proof-boundary test. It is not a claim of TRACE certification or formal conformance, and the public test contains no N’KEMBA proprietary reconstruction methodology.
 
 ## Evidence boundary
 
