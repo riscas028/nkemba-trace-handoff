@@ -68,9 +68,14 @@ The test deliberately preserves these boundaries:
 
 - `NEG-001`: a verified payment instruction is not proof that settlement occurred;
 - `NEG-002`: a verified notification action is not proof that a person was actually informed;
-- `NEG-003`: a verified runtime/tool action is not proof of institutional adoption, legal effect, or business effect.
+- `NEG-003`: a verified runtime/tool action is not proof of institutional adoption, legal effect, or business effect;
+- `NEG-004`: an upstream `outcome_unknown` state is not resolved into occurred or absent;
+- `NEG-005`: a resolved external reference or digest is not treated as attestation that the referenced fact is true;
+- `NEG-006`: an asserted but unverified approval is not treated as attributable human validation.
 
 Each case preserves the stronger downstream claims as `NOT_PROVED`. These are proof-boundary observations intended to make assurance overclaim visible and testable; they are not claims of TRACE certification or formal conformance.
+
+The external-safe [interoperability observation matrix](docs/interoperability-observations.md) records the input, naive overclaim, and required downstream result for all six executable cases.
 
 ## Evidence boundary
 
