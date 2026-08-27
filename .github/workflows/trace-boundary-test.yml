@@ -32,3 +32,6 @@ jobs:
 
       - name: Run handoff proof-boundary self-test
         run: python test_handoff.py
+
+      - name: Run negative institutional-claim boundary cases
+        run: python tests/test_negative_cases.py
