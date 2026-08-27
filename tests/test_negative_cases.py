@@ -56,4 +56,39 @@ institutional = run_case({
 })
 assert_not_promoted(institutional)
 
+# NEG-004: an upstream outcome_unknown state must not be resolved downstream.
+unknown_outcome = run_case({
+    "trace_verification": {"status": "VERIFIED", "source_id": "trace:neg-004"},
+    "action_evidence": {"status": "ACCEPTED", "source_id": "tool:irreversible-action"},
+    "outcome_evidence": {"status": "outcome_unknown", "source_id": "cmcp:neg-004"},
+})
+assert_not_promoted(unknown_outcome)
+assert unknown_outcome["outcome_evidence"]["status"] == "outcome_unknown"
+
+# NEG-005: a resolvable external reference/digest != attested external fact.
+resolved_reference = run_case({
+    "trace_verification": {"status": "VERIFIED", "source_id": "trace:neg-005"},
+    "action_evidence": {"status": "ACCEPTED", "source_id": "tool:reference-resolution"},
+    "outcome_evidence": {
+        "status": "REFERENCE_RESOLVED",
+        "source_id": "institutional-record:neg-005",
+        "scope": "digest-and-location-only",
+    },
+})
+assert_not_promoted(resolved_reference)
+assert resolved_reference["outcome_evidence"]["scope"] == "digest-and-location-only"
+
+# NEG-006: an asserted but unverified approval != attributable human validation.
+unverified_approval = run_case({
+    "trace_verification": {"status": "VERIFIED", "source_id": "trace:neg-006"},
+    "action_evidence": {"status": "ACCEPTED", "source_id": "tool:approval-request"},
+    "outcome_evidence": {
+        "status": "ASSERTED_NOT_VERIFIED",
+        "source_id": "approval-claim:neg-006",
+        "scope": "human-approval-assertion",
+    },
+})
+assert_not_promoted(unverified_approval)
+assert unverified_approval["institutional_claims"]["human_validation"] == "NOT_PROVED"
+
 print("PASS NKEMBA-TRACE-NEGATIVE-CASES-001")
