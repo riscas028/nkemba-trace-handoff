@@ -30,9 +30,10 @@ Python 3.11+:
 ```bash
 python handoff.py example-input.json output.json
 python test_handoff.py
+python tests/test_negative_cases.py
 ```
 
-The example input is synthetic and contains no private or customer data.
+The example inputs are synthetic and contain no private or customer data.
 
 ## Reproducible TRACE v0.2 signed-vector boundary test
 
@@ -61,7 +62,15 @@ The test deliberately preserves these boundaries:
 - legal effect remains `NOT_PROVED`;
 - business effect remains `NOT_PROVED`.
 
-This is an interoperability/proof-boundary test. It is not a claim of TRACE certification or formal conformance, and the public test contains no N’KEMBA proprietary reconstruction methodology.
+## Negative boundary cases
+
+`tests/test_negative_cases.py` contains deliberately adversarial downstream cases where a naive consumer could over-promote technical verification into an institutional claim:
+
+- `NEG-001`: a verified payment instruction is not proof that settlement occurred;
+- `NEG-002`: a verified notification action is not proof that a person was actually informed;
+- `NEG-003`: a verified runtime/tool action is not proof of institutional adoption, legal effect, or business effect.
+
+Each case preserves the stronger downstream claims as `NOT_PROVED`. These are proof-boundary observations intended to make assurance overclaim visible and testable; they are not claims of TRACE certification or formal conformance.
 
 ## Evidence boundary
 
@@ -69,4 +78,4 @@ The public integration ends at the handoff. Institutional reconstruction occurs 
 
 ## Licensing boundary
 
-The open-source license in this repository applies only to the files published here. It does not license or disclose any separate N’KEMBA proprietary implementation, schema, reconstruction methodology, semantic verification logic, contradiction handling, scoring/ranking logic, heuristics, sealed evidence material, or customer data.
+Repository source and test material is published under Apache License 2.0. The `NOTICE` file records the scope boundary: the public license does not license or disclose any separate N’KEMBA proprietary implementation, schema, reconstruction methodology, semantic verification logic, contradiction handling, scoring/ranking logic, heuristics, sealed evidence material, or customer data.
