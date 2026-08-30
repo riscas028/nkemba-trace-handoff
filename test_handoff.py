@@ -17,8 +17,16 @@ with tempfile.TemporaryDirectory() as d:
         x = json.load(f)
 
     assert x["trace_evidence"]["status"] == "VERIFIED"
+    assert x["trace_evidence"]["verification_performed"] == "YES"
+    assert x["trace_evidence"]["revocation_check"] == "NOT_PERFORMED"
+    assert x["trace_evidence"]["reproducibility"] == "NOT_ATTEMPTED"
+    assert "NK-TRACE-REVOCATION-NOT-PERFORMED" in x["trace_evidence"]["reason_codes"]
+    assert "NK-TRACE-REPRODUCIBILITY-NOT-ATTEMPTED" in x["trace_evidence"]["reason_codes"]
     assert x["action_evidence"]["physical_completion"] == "NOT_PROVED"
+    assert x["action_evidence"]["reason_code"] == "NK-OUTCOME-NOT-ESTABLISHED"
     assert x["institutional_claims"]["human_validation"] == "NOT_PROVED"
+    assert x["institutional_claims"]["human_authority"] == "NOT_PROVED"
+    assert x["institutional_claims"]["notification"] == "NOT_PROVED"
     assert x["institutional_claims"]["legal_effect"] == "NOT_PROVED"
     assert x["next_stage"] == "PRIVATE_NKEMBA_RECONSTRUCTION_NOT_INCLUDED"
 
