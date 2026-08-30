@@ -109,6 +109,14 @@ The external-safe [interoperability observation matrix](docs/interoperability-ob
 
 The public integration ends at the handoff. Institutional reconstruction occurs outside this repository.
 
+## Interactive public demonstration
+
+N’KEMBA’s public demonstration of the downstream institutional-reconstruction layer is available at:
+
+https://nkemba.pt/pilot.html
+
+The demonstration is intended for evaluation of the evidence boundary and does not disclose the proprietary institutional-reconstruction methodology.
+
 ## Licensing boundary
 
 Repository source and test material is published under Apache License 2.0. The `NOTICE` file records the scope boundary: the public license does not license or disclose any separate N’KEMBA proprietary implementation, schema, reconstruction methodology, semantic verification logic, contradiction handling, scoring/ranking logic, heuristics, sealed evidence material, or customer data.
