@@ -10,9 +10,37 @@ This public integration accepts a verification result supplied by an upstream TR
 - verification states;
 - explicit scope boundaries;
 - claims that remain `NOT_PROVED`;
+- stable downstream reason codes for material proof gaps;
 - an integrity digest over the handoff.
 
 The handoff deliberately separates technical evidence from later institutional facts.
+
+## Conservative TRACE-state preservation
+
+The adapter now preserves potentially material verification states separately instead of collapsing them into a single `VERIFIED`/`PASS` result:
+
+- `verification_performed`: `YES`, `NO`, `INDETERMINATE`, or `NOT_SUPPLIED`;
+- `revocation_check`: `CHECKED_PASS`, `CHECKED_FAIL`, `NOT_PERFORMED`, `INDETERMINATE`, or `NOT_SUPPLIED`;
+- `reproducibility`: `REPRODUCED`, `DIVERGED`, `NOT_ATTEMPTED`, or `NOT_SUPPLIED`;
+- optional `spec_version` and `verification_surface` provenance.
+
+`NOT_PERFORMED` and `INDETERMINATE` are deliberately not promoted to positive verification. A technically `VERIFIED` upstream record therefore remains distinct from evidence that revocation was checked, that deterministic reproduction succeeded, or that any downstream institutional outcome occurred.
+
+The reproducibility field is future-compatible experimental input handling. It does not claim that a proposed TRACE reproducibility feature is already normative or ratified.
+
+Stable N’KEMBA gap codes currently include:
+
+- `NK-TRACE-VERIFICATION-NOT-PERFORMED`;
+- `NK-TRACE-VERIFICATION-INDETERMINATE`;
+- `NK-TRACE-REVOCATION-NOT-PERFORMED`;
+- `NK-TRACE-REVOCATION-INDETERMINATE`;
+- `NK-TRACE-REVOCATION-FAILED`;
+- `NK-TRACE-REPRODUCIBILITY-DIVERGED`;
+- `NK-TRACE-REPRODUCIBILITY-NOT-ATTEMPTED`;
+- `NK-OUTCOME-NOT-ESTABLISHED`;
+- `NK-HUMAN-AUTHORITY-NOT-ESTABLISHED`;
+- `NK-NOTIFICATION-NOT-PROVEN`;
+- `NK-INSTITUTIONAL-OUTCOME-NOT-ESTABLISHED`.
 
 ## What it does not claim
 
