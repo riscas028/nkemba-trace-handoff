@@ -1,6 +1,11 @@
 {
   "trace_verification": {
     "status": "VERIFIED",
+    "verification_performed": "YES",
+    "revocation_check": "NOT_PERFORMED",
+    "reproducibility": "NOT_ATTEMPTED",
+    "spec_version": "v0.2",
+    "verification_surface": "external-trace-verifier",
     "source_id": "trace-example-001",
     "verifier": "external-trace-verifier"
   },
