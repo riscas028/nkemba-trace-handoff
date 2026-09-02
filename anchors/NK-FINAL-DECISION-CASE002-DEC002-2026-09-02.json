@@ -1,0 +1,13 @@
+{
+  "anchor_type": "PUBLIC_COMMIT_ANCHOR",
+  "anchor_version": "0.1",
+  "receipt_id": "CASE-002/DEC-002",
+  "final_receipt_payload_sha256": "88b01fc04d9c240cc83c03a80d407540bcedbf8fae73637d6ac1c3a895a028a8",
+  "signed_receipt_file_sha256": "f25d4f1cb0905d2ef3d26c8c83cf75a5c164aa15aeb4f686d66152a85bf773e8",
+  "statement": "This public record anchors only the listed digests. It contains no customer data.",
+  "limitations": [
+    "GitHub commit hosting is external/public anchoring, not a qualified electronic timestamp.",
+    "Repository owner retains control of the repository.",
+    "The anchor does not certify the truth or completeness of the underlying institutional evidence."
+  ]
+}
