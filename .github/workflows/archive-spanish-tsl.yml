@@ -1,0 +1,65 @@
+name: Archive Spanish official TSL snapshot
+
+on:
+  push:
+    paths:
+      - '.github/workflows/archive-spanish-tsl.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download official Spanish TSL and enforce expected SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_URL='https://tsl.digital.gob.es/TSL.xml'
+          EXPECTED_SHA='4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086'
+          OUT_DIR='official-trusted-lists/es/2026-09-02'
+          mkdir -p "$OUT_DIR"
+          curl --fail --show-error --location --retry 4 --retry-delay 2 \
+            --connect-timeout 20 --max-time 120 \
+            "$SOURCE_URL" -o "$OUT_DIR/TSL.xml"
+          ACTUAL_SHA="$(sha256sum "$OUT_DIR/TSL.xml" | awk '{print $1}')"
+          SIZE="$(stat -c '%s' "$OUT_DIR/TSL.xml")"
+          echo "source_url=$SOURCE_URL"
+          echo "size=$SIZE"
+          echo "sha256=$ACTUAL_SHA"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          test "$SIZE" = '3027766'
+          printf '%s  %s\n' "$ACTUAL_SHA" 'TSL.xml' > "$OUT_DIR/TSL.xml.sha256"
+          FETCHED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          cat > "$OUT_DIR/ACQUISITION.json" <<EOF
+          {
+            "evidence_type": "official_trusted_list_snapshot",
+            "jurisdiction": "ES",
+            "source_url": "$SOURCE_URL",
+            "fetched_at_utc": "$FETCHED_AT",
+            "expected_sha256": "$EXPECTED_SHA",
+            "actual_sha256": "$ACTUAL_SHA",
+            "byte_size": $SIZE,
+            "acceptance_rule": "archive only if actual_sha256 equals expected_sha256 and byte_size equals 3027766",
+            "provenance": "downloaded directly by GitHub Actions runner from the official Spanish trusted-list host"
+          }
+          EOF
+
+      - name: Commit immutable snapshot evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add official-trusted-lists/es/2026-09-02/TSL.xml \
+                  official-trusted-lists/es/2026-09-02/TSL.xml.sha256 \
+                  official-trusted-lists/es/2026-09-02/ACQUISITION.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: archive official Spanish TSL snapshot 2026-09-02'
+          git push origin HEAD:main
