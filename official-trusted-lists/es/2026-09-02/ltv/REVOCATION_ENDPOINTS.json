@@ -1,0 +1,7 @@
+{
+  "urls": [
+    "http://crl.sectigo.com/SectigoQualifiedTimeStampingRootR45.crl",
+    "http://crt.sectigo.com/SectigoQualifiedTimeStampingRootR45.crt",
+    "http://ocsp.sectigo.com"
+  ]
+}

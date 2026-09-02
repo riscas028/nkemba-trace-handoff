@@ -1,0 +1,7 @@
+{
+  "target": "Sectigo Qualified Time Stamping CA R35",
+  "official_tsl_snapshot_sha256": "4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086",
+  "token_time_utc": "2026-09-02T20:34:57Z",
+  "classification": "LTV_VALIDATION_MATERIAL_ARCHIVED_PARTIAL_PENDING_SEMANTIC_REVOCATION_ASSESSMENT",
+  "boundary": "Archived revocation material and certificate metadata do not by themselves prove historical non-revocation; final status requires issuer-chain-aware OCSP/CRL semantics and time applicability checks."
+}

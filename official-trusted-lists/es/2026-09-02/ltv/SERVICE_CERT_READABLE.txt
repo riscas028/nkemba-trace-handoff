@@ -1,0 +1,6 @@
+subject=C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping CA R35
+issuer=C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping Root R45
+serial=0CDA8301D3F3280E71CDB028A352C65B
+notBefore=Oct  5 00:00:00 2020 GMT
+notAfter=Oct  4 23:59:59 2035 GMT
+sha256 Fingerprint=CD:0A:3E:00:A1:BD:AE:3A:15:9F:A9:E3:D7:0F:8E:66:4F:56:0F:DC:E1:63:57:CB:E4:40:ED:0B:0D:88:24:4F

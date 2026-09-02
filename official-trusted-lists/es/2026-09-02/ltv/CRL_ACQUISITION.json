@@ -1,0 +1,9 @@
+[
+  {
+    "url": "http://crl.sectigo.com/SectigoQualifiedTimeStampingRootR45.crl",
+    "file": "crl_1.der",
+    "sha256": "6edd05bdf53499e5c2b9f7fa8a85b623f90dddbabf68bbde5f642e7ed0f5932a",
+    "bytes": 759,
+    "retrieved_at_utc": "2026-09-02T23:13:45.928052+00:00"
+  }
+]

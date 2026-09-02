@@ -1,0 +1,4 @@
+issuer=C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping Root R45
+lastUpdate=Sep  2 09:02:18 2026 GMT
+nextUpdate=Sep  9 09:02:18 2026 GMT
+SHA2-256 Fingerprint=6E:DD:05:BD:F5:34:99:E5:C2:B9:F7:FA:8A:85:B6:23:F9:0D:DD:BA:BF:68:BB:DE:5F:64:2E:7E:D0:F5:93:2A

@@ -1,0 +1,9 @@
+            X509v3 CRL Distribution Points: 
+                Full Name:
+                  URI:http://crl.sectigo.com/SectigoQualifiedTimeStampingRootR45.crl
+            Authority Information Access: 
+                CA Issuers - URI:http://crt.sectigo.com/SectigoQualifiedTimeStampingRootR45.crt
+                OCSP - URI:http://ocsp.sectigo.com
+    Signature Algorithm: sha384WithRSAEncryption
+    Signature Value:
+        18:a0:fb:76:52:76:7a:8d:ac:a3:14:c1:22:a0:64:4c:71:2b:

@@ -1,0 +1,92 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            0c:da:83:01:d3:f3:28:0e:71:cd:b0:28:a3:52:c6:5b
+        Signature Algorithm: sha384WithRSAEncryption
+        Issuer: C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping Root R45
+        Validity
+            Not Before: Oct  5 00:00:00 2020 GMT
+            Not After : Oct  4 23:59:59 2035 GMT
+        Subject: C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping CA R35
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (3072 bit)
+                Modulus:
+                    00:81:97:8e:e6:38:6c:c7:07:e3:37:cc:9c:ac:a2:
+                    23:c6:dc:d5:81:b5:af:c9:0c:cc:a1:c6:15:4b:ff:
+                    39:4b:9b:e3:0a:f3:2d:03:d0:b4:8c:18:b2:25:87:
+                    3e:98:36:9b:93:02:cc:a4:9e:ba:40:c6:a9:ab:38:
+                    aa:05:25:17:fe:a1:b9:b1:fa:a1:38:05:d9:04:22:
+                    91:11:30:da:74:2b:57:c3:c5:4d:92:15:13:c9:4e:
+                    6d:a6:42:ba:bc:30:9f:89:69:a4:99:94:2f:55:a8:
+                    a8:bc:47:64:29:6b:bd:34:84:51:89:6c:17:56:55:
+                    a8:35:de:e6:3c:8a:4b:83:c1:73:cd:dd:2e:ba:04:
+                    9f:a9:ee:21:30:61:13:ec:f9:0c:60:af:f7:b1:d5:
+                    dd:48:4c:70:82:4c:b8:a4:d9:99:0a:ed:89:48:c7:
+                    d2:8c:e0:de:59:f3:54:f2:36:4f:cc:b7:03:5e:c0:
+                    3f:25:89:6c:b9:ac:7f:7c:1a:63:9e:2f:20:6a:b4:
+                    ac:07:4b:2d:b6:f0:3d:15:06:59:81:d9:53:85:bb:
+                    9e:48:09:7c:88:8b:40:87:da:f9:dd:13:ff:51:46:
+                    e3:23:c9:5d:35:8a:d7:09:cb:64:2e:a5:0d:75:1b:
+                    7d:94:8e:c6:83:f6:79:00:b6:d2:0e:cc:cf:a8:d1:
+                    94:63:dd:61:02:6a:55:a2:06:6a:33:eb:11:46:2e:
+                    88:d2:7e:02:e6:10:9c:c0:cc:22:dc:0c:aa:bb:fc:
+                    06:3c:a0:b4:49:60:ff:09:bd:96:0d:46:04:ae:09:
+                    da:06:ec:65:8e:0f:62:66:55:90:54:de:72:87:24:
+                    02:c1:74:4d:d7:fb:9e:c7:4c:6d:3c:39:4d:ae:df:
+                    17:23:43:a2:17:52:ab:48:e0:07:72:f5:f5:7f:12:
+                    8d:34:18:0b:df:5b:78:26:35:44:f5:37:07:d6:46:
+                    d3:66:6b:97:ac:a2:3d:53:91:2d:b6:d4:2e:2a:16:
+                    6a:fc:0a:e7:a2:f4:4c:b7:43:cb
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Authority Key Identifier: 
+                59:81:A8:C3:85:64:E7:E3:44:A4:69:52:26:94:53:F6:3B:0D:EE:DE
+            X509v3 Subject Key Identifier: 
+                61:00:3F:77:D9:FF:EA:39:D2:91:A5:1C:BE:9D:35:C7:78:5E:A4:67
+            X509v3 Key Usage: critical
+                Digital Signature, Certificate Sign, CRL Sign
+            X509v3 Basic Constraints: critical
+                CA:TRUE, pathlen:0
+            X509v3 Extended Key Usage: 
+                Time Stamping
+            X509v3 Certificate Policies: 
+                Policy: X509v3 Any Policy
+            X509v3 CRL Distribution Points: 
+                Full Name:
+                  URI:http://crl.sectigo.com/SectigoQualifiedTimeStampingRootR45.crl
+            Authority Information Access: 
+                CA Issuers - URI:http://crt.sectigo.com/SectigoQualifiedTimeStampingRootR45.crt
+                OCSP - URI:http://ocsp.sectigo.com
+    Signature Algorithm: sha384WithRSAEncryption
+    Signature Value:
+        18:a0:fb:76:52:76:7a:8d:ac:a3:14:c1:22:a0:64:4c:71:2b:
+        c3:a1:e6:56:6a:dd:8c:a8:e2:bf:25:73:c8:a7:94:d5:5f:46:
+        53:32:ca:1b:96:30:23:1d:73:b9:28:94:f0:c8:36:bf:06:f8:
+        31:99:92:23:bd:bb:f0:20:59:00:49:c6:c8:9e:f8:e5:ef:33:
+        74:59:8b:6f:83:7f:23:d1:ef:60:68:7f:e1:81:c2:58:41:81:
+        3a:42:45:d9:58:ae:72:d7:f8:26:cc:e0:c8:68:04:8b:11:0a:
+        0e:a1:0d:ef:db:0b:cb:91:e5:53:21:10:6e:45:c4:4a:16:1e:
+        3c:03:c7:d0:87:62:a1:6a:2b:e3:07:56:c3:82:6f:71:68:2d:
+        ec:df:3c:28:3e:db:8c:d7:f6:75:f4:02:10:47:0b:4e:d6:dc:
+        56:d8:34:eb:17:4b:ec:1a:bd:e3:6c:c2:10:e7:80:4b:7b:55:
+        7d:e7:f5:7e:f2:cc:8e:b2:0c:3a:ed:b2:8c:25:ea:2b:b4:23:
+        69:8a:98:89:91:49:e4:50:0a:3e:2a:19:74:72:96:61:ed:b6:
+        5d:0a:ed:92:f0:7a:90:19:08:92:d7:53:ed:61:bf:b6:82:e4:
+        35:0b:33:2b:8c:3c:99:51:52:17:1d:15:ee:1f:7b:9e:1d:50:
+        f5:5b:4e:b7:4b:3f:d8:02:6c:84:f3:ad:d0:a0:44:d1:9e:85:
+        0f:cf:1e:37:aa:59:d7:52:7f:d6:8c:1a:d3:1e:35:f8:13:c1:
+        85:c4:12:1b:b8:d5:b7:d5:42:9a:5d:ec:68:68:8e:ef:ce:d5:
+        00:33:33:26:57:55:af:9c:1b:f6:61:a6:3b:c9:81:c9:6e:95:
+        21:11:3e:54:08:32:63:b0:18:0c:b2:71:7e:dc:ef:8e:9b:55:
+        40:f3:3a:dc:79:22:96:ac:62:6f:b5:9f:4c:01:ea:2d:bf:20:
+        10:46:66:25:cd:87:72:2b:75:d2:2d:aa:f3:19:60:2c:3f:00:
+        0d:67:24:32:48:50:54:a8:c9:b8:8d:51:cd:34:2c:84:e1:47:
+        0d:30:be:66:fb:80:b6:14:3e:ec:49:d3:7e:70:6c:55:74:0e:
+        b5:2a:a8:ee:3e:8d:59:ae:92:02:80:c7:a1:7c:63:3c:18:bd:
+        db:1c:66:80:c7:8e:f5:c9:9f:d6:44:ca:3e:07:4d:60:bc:82:
+        70:e7:17:6a:bc:83:2e:94:50:6c:99:28:af:36:c4:25:42:ea:
+        ea:2e:77:71:0b:1d:4d:b7:ae:e6:03:d8:a0:7f:b1:52:2b:8e:
+        1b:34:cc:3e:d6:61:d8:82:49:30:63:8f:90:07:0b:13:08:19:
+        1a:47:48:cd:fe:22:f7:b5
