@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/archive-spanish-tsl.yml'
+      - 'evidence-triggers/archive-spanish-tsl.trigger'
 
 permissions:
   contents: write
