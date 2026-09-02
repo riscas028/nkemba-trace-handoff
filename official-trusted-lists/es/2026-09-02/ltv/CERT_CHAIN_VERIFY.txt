@@ -1,0 +1,1 @@
+official-trusted-lists/es/2026-09-02/ltv/service_cert_1.pem: OK

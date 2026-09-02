@@ -1,0 +1,12 @@
+{
+  "target_certificate_serial": "0CDA8301D3F3280E71CDB028A352C65B",
+  "token_time_utc": "2026-09-02T20:34:57Z",
+  "crl_last_update_utc": "2026-09-02T09:02:18Z",
+  "crl_next_update_utc": "2026-09-09T09:02:18Z",
+  "token_time_within_crl_validity_window": true,
+  "target_serial_present_in_crl_revoked_entries": false,
+  "certificate_chain_verify_output": "official-trusted-lists/es/2026-09-02/ltv/service_cert_1.pem: OK",
+  "crl_signature_verify_output": "verify OK",
+  "classification": "R35_CA_CERT_NOT_REVOKED_AT_TOKEN_TIME_BY_SIGNED_APPLICABLE_CRL",
+  "boundary": "This proves the R35 CA certificate was not listed as revoked in the issuer-signed CRL applicable at token time. It does not by itself prove the end-entity TSA signer revocation status or the signature of the national Trusted List."
+}

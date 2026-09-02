@@ -1,0 +1,45 @@
+Certificate Revocation List (CRL):
+        Version 2 (0x1)
+        Signature Algorithm: sha384WithRSAEncryption
+        Issuer: C = ES, O = Sectigo (Europe) SL, CN = Sectigo Qualified Time Stamping Root R45
+        Last Update: Sep  2 09:02:18 2026 GMT
+        Next Update: Sep  9 09:02:18 2026 GMT
+        CRL extensions:
+            X509v3 Authority Key Identifier: 
+                59:81:A8:C3:85:64:E7:E3:44:A4:69:52:26:94:53:F6:3B:0D:EE:DE
+            X509v3 CRL Number: 
+                2264
+            2.5.29.60: 
+                ..20201005000000Z
+No Revoked Certificates.
+    Signature Algorithm: sha384WithRSAEncryption
+    Signature Value:
+        05:88:1a:9e:0f:b6:aa:66:d6:03:76:1e:23:51:5a:86:44:20:
+        45:9d:1e:d5:23:66:b1:9f:de:68:cb:9a:63:06:e6:7b:5f:7b:
+        9d:8f:81:e9:13:dd:a5:2f:e1:44:66:91:2f:87:99:e2:57:9d:
+        5c:66:7d:4b:74:45:5e:c7:22:29:bd:ba:12:30:b2:46:d6:7c:
+        c7:41:02:6c:8b:95:e2:f9:b5:d0:13:fa:0b:06:77:77:b7:fd:
+        b2:52:53:13:6e:9d:98:41:31:91:ea:e5:05:b8:a4:b1:31:38:
+        bb:32:03:8b:54:a7:78:36:0a:4f:ad:62:3f:4c:66:d6:63:68:
+        f8:f8:b8:44:53:f2:9b:fa:55:4f:f0:96:6a:3c:a0:5e:1c:b3:
+        2f:5f:c3:08:0e:13:04:d0:18:25:be:13:84:e3:2b:16:d8:eb:
+        7e:d3:db:e8:e4:c7:58:7e:73:aa:12:25:8c:86:88:4b:20:e9:
+        2d:d3:d6:6e:b1:b7:16:ad:03:c8:c8:3b:a3:00:39:dc:b8:bb:
+        1e:b8:39:5f:72:f2:7f:35:2d:7a:34:1f:95:59:d2:c0:b3:3e:
+        a6:61:02:81:4c:e6:46:4a:25:c8:3c:34:3d:58:98:81:df:e5:
+        68:20:4e:70:8a:f8:00:fa:16:71:1c:6a:4e:d0:2f:3a:39:a5:
+        94:c9:8a:46:8e:24:f4:52:13:6a:00:c4:b4:ae:ec:bf:f7:9f:
+        a4:f5:6d:44:b4:6f:0b:38:31:5d:44:a0:7f:4e:af:80:68:c8:
+        12:01:79:19:d4:1b:0d:8a:66:72:af:cc:6d:6e:b9:a0:10:55:
+        67:f7:3b:a5:a2:92:76:d3:3e:64:6c:5d:5c:97:b9:b0:4a:a3:
+        87:e6:51:bd:90:3b:9f:1c:52:cb:f7:50:68:70:a2:5e:f7:2b:
+        42:bf:2e:c9:b0:8d:25:f6:fd:55:79:75:d2:e4:48:57:02:5a:
+        ae:7b:1b:b8:f5:88:1f:a4:22:e9:2d:a9:46:76:df:26:74:4c:
+        e6:0c:46:5d:99:83:ef:67:f4:b4:0a:a0:9b:71:f9:0f:1f:c6:
+        bd:e6:bf:cc:14:34:2c:a7:0f:02:e3:bf:65:74:fd:86:b0:42:
+        85:58:ff:4f:12:f0:af:5e:2d:0c:f9:49:ca:76:0f:2c:79:ee:
+        af:33:74:c2:d5:8d:ab:cd:eb:89:01:d6:d7:bc:bc:16:24:3a:
+        a9:0d:46:4a:99:5d:08:64:52:3d:6a:f6:b9:4c:d4:64:0c:e3:
+        ea:9b:5f:82:83:8f:df:86:73:55:8f:af:1e:77:18:4f:76:31:
+        e2:41:d4:ca:f5:8e:51:72:de:17:a2:25:a9:bf:d4:98:21:2f:
+        cd:2f:b1:7a:58:75:2f:76
