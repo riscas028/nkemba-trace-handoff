@@ -1,0 +1,80 @@
+name: TSA Signer 3 revocation validation
+on:
+  push:
+    paths:
+      - 'triggers/ltv-tsa-signer3.trigger'
+permissions:
+  contents: write
+jobs:
+  signer3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover signer certificate from archived RFC3161 token and validate revocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT='official-trusted-lists/es/2026-09-02/ltv/signer3'
+          mkdir -p "$OUT"
+          TOKEN=$(find . -type f \( -name '*.tsr' -o -name '*TIMESTAMP*.tsr' \) | head -1 || true)
+          if [ -z "$TOKEN" ]; then
+            B64=$(find . -type f -name '*.tsr.b64' | head -1 || true)
+            [ -n "$B64" ] || { echo 'No archived timestamp token found'; exit 3; }
+            base64 -d "$B64" > "$OUT/token.tsr"; TOKEN="$OUT/token.tsr"
+          fi
+          openssl ts -reply -in "$TOKEN" -token_out -out "$OUT/token.p7s"
+          openssl pkcs7 -inform DER -in "$OUT/token.p7s" -print_certs -out "$OUT/token_certs.pem"
+          csplit -s -f "$OUT/cert_" -b '%02d.pem' "$OUT/token_certs.pem" '/-----BEGIN CERTIFICATE-----/' '{*}' || true
+          python3 - <<'PY'
+          import pathlib,subprocess,json,re
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv/signer3'); found=[]
+          for f in p.glob('cert_*.pem'):
+              if 'BEGIN CERTIFICATE' not in f.read_text(errors='ignore'): continue
+              q=subprocess.run(['openssl','x509','-in',str(f),'-noout','-subject','-issuer','-serial','-dates','-fingerprint','-sha256','-text'],capture_output=True,text=True)
+              if q.returncode: continue
+              txt=q.stdout
+              if 'Time Stamping' in txt and 'CA:TRUE' not in txt:
+                  (p/'TSA_SIGNER_3.pem').write_text(f.read_text()); (p/'TSA_SIGNER_3_READABLE.txt').write_text(txt); found.append(str(f))
+          if not found: raise SystemExit('End-entity TSA signer certificate not found in token')
+          PY
+          SIGNER="$OUT/TSA_SIGNER_3.pem"
+          SERIAL=$(openssl x509 -in "$SIGNER" -noout -serial | cut -d= -f2 | tr '[:lower:]' '[:upper:]')
+          openssl x509 -in "$SIGNER" -noout -ocsp_uri > "$OUT/OCSP_URI.txt" || true
+          openssl x509 -in "$SIGNER" -noout -text > "$OUT/SIGNER_FULL.txt"
+          python3 - <<'PY'
+          import re,pathlib,json,urllib.request,hashlib,datetime
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv/signer3'); txt=(p/'SIGNER_FULL.txt').read_text(errors='ignore')
+          urls=re.findall(r'URI:(https?://[^\s,]+)',txt); (p/'REVOCATION_ENDPOINTS.json').write_text(json.dumps({'urls':urls},indent=2)+'\n')
+          res=[]
+          for i,u in enumerate(urls,1):
+              if 'crl' not in u.lower() and not u.lower().endswith('.crl'): continue
+              try:
+                  data=urllib.request.urlopen(u,timeout=30).read(); f=p/f'signer_crl_{i}.der'; f.write_bytes(data); res.append({'url':u,'file':f.name,'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'retrieved_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()})
+              except Exception as e: res.append({'url':u,'error':str(e)})
+          (p/'CRL_ACQUISITION.json').write_text(json.dumps(res,indent=2)+'\n')
+          PY
+          CRL=$(find "$OUT" -name 'signer_crl_*.der' | head -1)
+          [ -n "$CRL" ] || { echo 'No signer CRL acquired'; exit 4; }
+          openssl crl -inform DER -in "$CRL" -out "$OUT/signer_crl.pem"
+          openssl crl -in "$OUT/signer_crl.pem" -noout -text > "$OUT/SIGNER_CRL_FULL.txt"
+          R35='official-trusted-lists/es/2026-09-02/ltv/service_cert_1.pem'
+          openssl verify -CAfile "$R35" -partial_chain "$SIGNER" > "$OUT/SIGNER_CHAIN_VERIFY.txt"
+          openssl crl -in "$OUT/signer_crl.pem" -noout -verify -CAfile "$R35" > "$OUT/SIGNER_CRL_SIGNATURE_VERIFY.txt" 2>&1
+          openssl crl -in "$OUT/signer_crl.pem" -noout -lastupdate -nextupdate > "$OUT/SIGNER_CRL_DATES.txt"
+          python3 - <<'PY'
+          import pathlib,re,json,datetime
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv/signer3'); info=(p/'TSA_SIGNER_3_READABLE.txt').read_text(); serial=re.search(r'serial=([0-9A-F]+)',info).group(1).upper(); crl=(p/'SIGNER_CRL_FULL.txt').read_text(errors='ignore').upper(); dates=(p/'SIGNER_CRL_DATES.txt').read_text()
+          def dt(k): return datetime.datetime.strptime(re.search(k+r'=(.+)',dates).group(1).strip(),'%b %d %H:%M:%S %Y GMT').replace(tzinfo=datetime.timezone.utc)
+          last,nextu=dt('lastUpdate'),dt('nextUpdate'); token=datetime.datetime.fromisoformat('2026-09-02T20:34:57+00:00'); revoked=('SERIAL NUMBER: '+serial) in crl or ('SERIAL NUMBER:\n            '+serial) in crl; chain=(p/'SIGNER_CHAIN_VERIFY.txt').read_text().strip(); sig=(p/'SIGNER_CRL_SIGNATURE_VERIFY.txt').read_text().strip()
+          r={'signer_serial':serial,'token_time_utc':'2026-09-02T20:34:57Z','crl_last_update_utc':last.isoformat().replace('+00:00','Z'),'crl_next_update_utc':nextu.isoformat().replace('+00:00','Z'),'token_time_within_crl_validity_window':last<=token<=nextu,'signer_serial_present_in_revoked_entries':revoked,'signer_chain_verify_output':chain,'crl_signature_verify_output':sig}
+          r['classification']='TSA_SIGNER_3_NOT_REVOKED_AT_TOKEN_TIME_BY_SIGNED_APPLICABLE_CRL' if (last<=token<=nextu and not revoked and 'OK' in chain and 'verify OK' in sig) else 'NOT_CLOSED'; r['boundary']='Revocation status evidence does not prove upstream documentary truth and does not replace Trusted List signature validation.'; (p/'TSA_SIGNER_3_REVOCATION_ASSESSMENT.json').write_text(json.dumps(r,indent=2)+'\n'); print(json.dumps(r,indent=2));
+          if r['classification']=='NOT_CLOSED': raise SystemExit(2)
+          PY
+      - name: Commit signer evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add official-trusted-lists/es/2026-09-02/ltv/signer3
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: archive TSA Signer 3 revocation validation'
+          git push origin HEAD:main
