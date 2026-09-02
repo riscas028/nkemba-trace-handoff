@@ -2,7 +2,7 @@
   "evidence_type": "official_trusted_list_snapshot",
   "jurisdiction": "ES",
   "source_url": "https://tsl.digital.gob.es/TSL.xml",
-  "fetched_at_utc": "2026-09-02T23:05:41Z",
+  "fetched_at_utc": "2026-09-02T23:06:31Z",
   "expected_sha256": "4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086",
   "actual_sha256": "4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086",
   "byte_size": 3027766,
