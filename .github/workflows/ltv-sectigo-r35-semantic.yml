@@ -1,0 +1,62 @@
+name: Sectigo R35 semantic CRL validation
+on:
+  push:
+    paths:
+      - 'triggers/ltv-sectigo-r35-semantic.trigger'
+permissions:
+  contents: write
+jobs:
+  semantic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify CRL signature and non-revocation at token time
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT='official-trusted-lists/es/2026-09-02/ltv'
+          CERT="$OUT/service_cert_1.pem"
+          CRL="$OUT/crl_1.der"
+          ROOT="$OUT/root_r45.pem"
+          curl -fsSL 'http://crt.sectigo.com/SectigoQualifiedTimeStampingRootR45.crt' -o "$OUT/root_r45.der"
+          openssl x509 -inform DER -in "$OUT/root_r45.der" -out "$ROOT"
+          openssl verify -CAfile "$ROOT" "$CERT" > "$OUT/CERT_CHAIN_VERIFY.txt"
+          openssl crl -inform DER -in "$CRL" -out "$OUT/crl_1.pem"
+          openssl crl -in "$OUT/crl_1.pem" -noout -verify -CAfile "$ROOT" > "$OUT/CRL_SIGNATURE_VERIFY.txt" 2>&1
+          openssl crl -in "$OUT/crl_1.pem" -noout -text > "$OUT/CRL_FULL.txt"
+          SERIAL=$(openssl x509 -in "$CERT" -noout -serial | cut -d= -f2 | tr '[:lower:]' '[:upper:]')
+          python3 - <<'PY'
+          import pathlib,re,json,datetime,subprocess
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv')
+          cert=(p/'SERVICE_CERT_READABLE.txt').read_text(); serial=re.search(r'serial=([0-9A-F]+)',cert).group(1).upper()
+          crl=(p/'CRL_FULL.txt').read_text(errors='ignore').upper()
+          revoked=('SERIAL NUMBER: '+serial) in crl or ('SERIAL NUMBER:\n            '+serial) in crl
+          readable=(p/'crl_1.der.readable.txt').read_text()
+          def dt(label):
+              s=re.search(label+r'=(.+)',readable).group(1).strip(); return datetime.datetime.strptime(s,'%b %d %H:%M:%S %Y GMT').replace(tzinfo=datetime.timezone.utc)
+          last,nextu=dt('lastUpdate'),dt('nextUpdate'); token=datetime.datetime.fromisoformat('2026-09-02T20:34:57+00:00')
+          chain=(p/'CERT_CHAIN_VERIFY.txt').read_text().strip(); sig=(p/'CRL_SIGNATURE_VERIFY.txt').read_text().strip()
+          result={
+            'target_certificate_serial':serial,
+            'token_time_utc':token.isoformat().replace('+00:00','Z'),
+            'crl_last_update_utc':last.isoformat().replace('+00:00','Z'),
+            'crl_next_update_utc':nextu.isoformat().replace('+00:00','Z'),
+            'token_time_within_crl_validity_window': last <= token <= nextu,
+            'target_serial_present_in_crl_revoked_entries':revoked,
+            'certificate_chain_verify_output':chain,
+            'crl_signature_verify_output':sig,
+          }
+          result['classification']='R35_CA_CERT_NOT_REVOKED_AT_TOKEN_TIME_BY_SIGNED_APPLICABLE_CRL' if (last<=token<=nextu and not revoked and 'OK' in chain and 'verify OK' in sig) else 'NOT_CLOSED'
+          result['boundary']='This proves the R35 CA certificate was not listed as revoked in the issuer-signed CRL applicable at token time. It does not by itself prove the end-entity TSA signer revocation status or the signature of the national Trusted List.'
+          (p/'SEMANTIC_CRL_ASSESSMENT.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result,indent=2))
+          if result['classification']=='NOT_CLOSED': raise SystemExit(2)
+          PY
+      - name: Commit semantic evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add official-trusted-lists/es/2026-09-02/ltv
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: verify Sectigo R35 CRL semantics at token time'
+          git push origin HEAD:main
