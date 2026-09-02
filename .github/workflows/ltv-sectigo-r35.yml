@@ -1,0 +1,93 @@
+name: Sectigo R35 LTV revocation closure
+
+on:
+  push:
+    paths:
+      - 'triggers/ltv-sectigo-r35.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  ltv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build LTV evidence from archived official TSL
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='official-trusted-lists/es/2026-09-02'
+          XML="$BASE/TSL.xml"
+          OUT="$BASE/ltv"
+          mkdir -p "$OUT"
+          EXPECTED='4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086'
+          test "$(sha256sum "$XML" | awk '{print $1}')" = "$EXPECTED"
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET, pathlib, base64, re, json, hashlib
+          base=pathlib.Path('official-trusted-lists/es/2026-09-02'); out=base/'ltv'; xml=base/'TSL.xml'
+          root=ET.parse(xml).getroot()
+          def local(e): return e.tag.split('}')[-1]
+          target=None
+          for s in root.iter():
+              if local(s)=='TSPService' and 'Sectigo Qualified Time Stamping CA R35' in ''.join(s.itertext()):
+                  target=s; break
+          if target is None: raise SystemExit('target TSPService not found')
+          frag=ET.tostring(target,encoding='utf-8',xml_declaration=True); (out/'SECTIGO_R35_TSPService.xml').write_bytes(frag)
+          certs=[]
+          for e in target.iter():
+              if local(e)=='X509Certificate' and e.text:
+                  der=base64.b64decode(''.join(e.text.split())); certs.append(der)
+          if not certs: raise SystemExit('no service certificate found')
+          for i,der in enumerate(certs,1):
+              b64=base64.encodebytes(der).decode().replace('\n','')
+              pem='-----BEGIN CERTIFICATE-----\n'+'\n'.join(b64[j:j+64] for j in range(0,len(b64),64))+'\n-----END CERTIFICATE-----\n'
+              (out/f'service_cert_{i}.pem').write_text(pem)
+          meta={'service_fragment_sha256':hashlib.sha256(frag).hexdigest(),'service_cert_count':len(certs),'snapshot_sha256':hashlib.sha256(xml.read_bytes()).hexdigest()}
+          (out/'LTV_EXTRACTION.json').write_text(json.dumps(meta,indent=2)+'\n')
+          PY
+          CERT="$OUT/service_cert_1.pem"
+          openssl x509 -in "$CERT" -noout -subject -issuer -serial -dates -fingerprint -sha256 > "$OUT/SERVICE_CERT_READABLE.txt"
+          openssl x509 -in "$CERT" -noout -ocsp_uri > "$OUT/OCSP_URI.txt" || true
+          openssl x509 -in "$CERT" -noout -text > "$OUT/SERVICE_CERT_FULL.txt"
+          grep -A8 -i 'CRL Distribution Points' "$OUT/SERVICE_CERT_FULL.txt" > "$OUT/CRL_DISTRIBUTION_POINTS.txt" || true
+          python3 - <<'PY'
+          import re, pathlib, json
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv')
+          txt=(p/'SERVICE_CERT_FULL.txt').read_text(errors='ignore')
+          urls=re.findall(r'URI:(https?://[^\s,]+)',txt)
+          (p/'REVOCATION_ENDPOINTS.json').write_text(json.dumps({'urls':urls},indent=2)+'\n')
+          PY
+          python3 - <<'PY'
+          import json,pathlib,subprocess,urllib.request,hashlib,datetime
+          p=pathlib.Path('official-trusted-lists/es/2026-09-02/ltv'); eps=json.loads((p/'REVOCATION_ENDPOINTS.json').read_text())['urls']; results=[]
+          for i,u in enumerate(eps,1):
+              if not ('crl' in u.lower() or u.lower().endswith('.crl')): continue
+              try:
+                  data=urllib.request.urlopen(u,timeout=30).read(); f=p/f'crl_{i}.der'; f.write_bytes(data)
+                  results.append({'url':u,'file':f.name,'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'retrieved_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()})
+              except Exception as e: results.append({'url':u,'error':str(e)})
+          (p/'CRL_ACQUISITION.json').write_text(json.dumps(results,indent=2)+'\n')
+          PY
+          for f in "$OUT"/crl_*.der; do [ -e "$f" ] || continue; openssl crl -inform DER -in "$f" -noout -issuer -lastupdate -nextupdate -fingerprint -sha256 > "$f.readable.txt" || true; done
+          cat > "$OUT/LTV_ASSESSMENT.json" <<EOF
+          {
+            "target": "Sectigo Qualified Time Stamping CA R35",
+            "official_tsl_snapshot_sha256": "$EXPECTED",
+            "token_time_utc": "2026-09-02T20:34:57Z",
+            "classification": "LTV_VALIDATION_MATERIAL_ARCHIVED_PARTIAL_PENDING_SEMANTIC_REVOCATION_ASSESSMENT",
+            "boundary": "Archived revocation material and certificate metadata do not by themselves prove historical non-revocation; final status requires issuer-chain-aware OCSP/CRL semantics and time applicability checks."
+          }
+          EOF
+      - name: Commit LTV evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add official-trusted-lists/es/2026-09-02/ltv
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: archive Sectigo R35 LTV revocation material'
+          git push origin HEAD:main
