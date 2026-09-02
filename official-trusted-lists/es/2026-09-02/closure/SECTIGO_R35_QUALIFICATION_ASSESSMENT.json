@@ -1,0 +1,65 @@
+{
+  "evidence_type": "qualified_trust_service_status_from_archived_official_trusted_list",
+  "jurisdiction": "ES",
+  "official_snapshot_path": "official-trusted-lists/es/2026-09-02/TSL.xml",
+  "official_snapshot_sha256": "4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086",
+  "official_digest_source_url": "https://tsl.digital.gob.es/TSL.sha2",
+  "official_digest_file_sha256": "6225c662f707fae349aefc5afb8c4bdd19c62bd6c6330c4296181e743e376776",
+  "expected_official_snapshot_sha256": "4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086",
+  "token_time_utc": "2026-09-02T20:34:57Z",
+  "provider_name_candidates": [
+    "Sectigo (Europe) SL",
+    "Sectigo (Europe) SL",
+    "SECTIGO",
+    "SECTIGO",
+    "VATES-B01683580",
+    "Qualified Certificates issued by “Sectigo Qualified Website Authentication CA E35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Website Authentication CA E35”",
+    "Qualified Certificates issued by “Sectigo Qualified Website Authentication CA R35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Website Authentication CA R35”",
+    "Qualified Certificates issued by “Sectigo Qualified Time Stamping CA R35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Time Stamping CA R35”",
+    "Qualified Certificates issued by “Sectigo Qualified Natural Person CA E35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Natural Person CA E35”",
+    "Qualified Certificates issued by “Sectigo Qualified Natural Person CA R35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Natural Person CA R35”",
+    "Qualified Certificates issued by “Sectigo Qualified Legal Person CA E35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Legal Person CA E35”",
+    "Qualified Certificates issued by “Sectigo Qualified Legal Person CA R35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Legal Person CA R35”",
+    "Qualified Certificates issued by “Sectigo Qualified Website Authentication CA Natural E35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Website Authentication CA Natural E35”",
+    "Qualified Certificates issued by “Sectigo Qualified Website Authentication CA Natural R35”",
+    "Certificados cualificados emitidos por “Sectigo Qualified Website Authentication CA Natural R35”",
+    "Qualified Certificates issued by Sectigo Qualified Website Authentication CA E39",
+    "Certificados Cualificados emitidos por Sectigo Qualified Website Authentication CA E39",
+    "Qualified Certificates issued by Sectigo Qualified Website Authentication CA R39",
+    "Certificados Cualificados emitidos por Sectigo Qualified Website Authentication CA R39",
+    "Qualified Certificates issued by Sectigo Qualified Website Authentication CA Natural E39",
+    "Certificados Cualificados emitidos por Sectigo Qualified Website Authentication CA Natural E39",
+    "Qualified Certificates issued by Sectigo Qualified Website Authentication CA Natural R39",
+    "Certificados Cualificados emitidos por Sectigo Qualified Website Authentication CA Natural R39"
+  ],
+  "service_target_name": "Sectigo Qualified Time Stamping CA R35",
+  "service_type_identifier": "http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST",
+  "current_service_status": "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted",
+  "current_status_starting_time": "2021-05-05T01:00:00Z",
+  "x509_subject_names": [
+    "CN=Sectigo Qualified Time Stamping CA R35, O=Sectigo (Europe) SL, C=ES"
+  ],
+  "status_candidates": [
+    {
+      "source": "ServiceInformation",
+      "status": "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted",
+      "starting_time": "2021-05-05T01:00:00Z"
+    }
+  ],
+  "status_applicable_at_token_time": {
+    "source": "ServiceInformation",
+    "status": "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted",
+    "starting_time": "2021-05-05T01:00:00Z"
+  },
+  "tspservice_fragment_sha256": "78baca170648ab4f1f4e7950c532c29fd5bc8f47978e8b08c28d97f5ce1f1663",
+  "classification": "QUALIFIED_STATUS_PROVEN_BY_ARCHIVED_OFFICIAL_TL_SNAPSHOT",
+  "boundary": "This proves the official Trusted List snapshot and listed service status for the defined token time; it is not independent certification of N'KEMBA or proof of institutional truth."
+}
