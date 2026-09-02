@@ -1,0 +1,162 @@
+name: Close Spanish TSL qualification evidence
+
+on:
+  push:
+    paths:
+      - 'evidence-triggers/close-spanish-tsl-evidence.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify official digest publication and extract Sectigo R35 service evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          SNAP='official-trusted-lists/es/2026-09-02/TSL.xml'
+          OUT='official-trusted-lists/es/2026-09-02/closure'
+          EXPECTED='4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086'
+          TOKEN_TIME='2026-09-02T20:34:57Z'
+          mkdir -p "$OUT"
+
+          test "$(sha256sum "$SNAP" | awk '{print $1}')" = "$EXPECTED"
+
+          curl --fail --show-error --location --retry 4 --retry-delay 2 \
+            --connect-timeout 20 --max-time 60 \
+            'https://tsl.digital.gob.es/TSL.sha2' -o "$OUT/TSL.sha2"
+
+          tr -d '\r\n[:space:]' < "$OUT/TSL.sha2" > "$OUT/TSL.sha2.normalized"
+          grep -qi "$EXPECTED" "$OUT/TSL.sha2.normalized"
+
+          python3 - <<'PY'
+          import json, hashlib, xml.etree.ElementTree as ET
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          snap = Path('official-trusted-lists/es/2026-09-02/TSL.xml')
+          out = Path('official-trusted-lists/es/2026-09-02/closure')
+          target_name = 'Sectigo Qualified Time Stamping CA R35'
+          token_time_s = '2026-09-02T20:34:57Z'
+          token_time = datetime.fromisoformat(token_time_s.replace('Z','+00:00'))
+
+          root = ET.parse(snap).getroot()
+          parent = {c:p for p in root.iter() for c in p}
+
+          def local(tag):
+              return tag.rsplit('}',1)[-1]
+          def text_of(elem, lname):
+              for x in elem.iter():
+                  if local(x.tag) == lname and x.text:
+                      return x.text.strip()
+              return None
+          def all_text(elem, lname):
+              vals=[]
+              for x in elem.iter():
+                  if local(x.tag)==lname and x.text and x.text.strip():
+                      vals.append(x.text.strip())
+              return vals
+          def parse_time(s):
+              if not s: return None
+              return datetime.fromisoformat(s.replace('Z','+00:00'))
+
+          matches=[]
+          for e in root.iter():
+              if e.text and target_name in e.text:
+                  cur=e
+                  while cur is not None and local(cur.tag) != 'TSPService':
+                      cur=parent.get(cur)
+                  if cur is not None and cur not in matches:
+                      matches.append(cur)
+
+          if len(matches) != 1:
+              raise SystemExit(f'Expected exactly one TSPService match, found {len(matches)}')
+          svc=matches[0]
+
+          # Provider ancestor
+          cur=svc
+          provider=None
+          while cur is not None:
+              if local(cur.tag) == 'TrustServiceProvider':
+                  provider=cur; break
+              cur=parent.get(cur)
+
+          provider_names=all_text(provider, 'Name') if provider is not None else []
+          service_type=text_of(svc,'ServiceTypeIdentifier')
+          current_status=text_of(svc,'ServiceStatus')
+          current_start=text_of(svc,'StatusStartingTime')
+          subjects=all_text(svc,'X509SubjectName')
+
+          # Gather current + history status intervals from this service.
+          candidates=[]
+          # ServiceInformation fields: get direct descendant values before ServiceHistory.
+          service_info=None
+          for x in svc:
+              if local(x.tag)=='ServiceInformation': service_info=x
+          if service_info is not None:
+              st=text_of(service_info,'ServiceStatus'); ss=text_of(service_info,'StatusStartingTime')
+              if st and ss: candidates.append({'source':'ServiceInformation','status':st,'starting_time':ss})
+          for x in svc.iter():
+              if local(x.tag)=='ServiceHistoryInstance':
+                  st=text_of(x,'ServiceStatus'); ss=text_of(x,'StatusStartingTime')
+                  if st and ss: candidates.append({'source':'ServiceHistoryInstance','status':st,'starting_time':ss})
+
+          eligible=[]
+          for c in candidates:
+              dt=parse_time(c['starting_time'])
+              if dt and dt <= token_time:
+                  eligible.append((dt,c))
+          if not eligible:
+              raise SystemExit('No service status applicable at token time')
+          applicable=max(eligible,key=lambda z:z[0])[1]
+
+          frag=ET.tostring(svc, encoding='utf-8', xml_declaration=True)
+          (out/'SECTIGO_R35_TSPService.xml').write_bytes(frag)
+          frag_sha=hashlib.sha256(frag).hexdigest()
+          snap_sha=hashlib.sha256(snap.read_bytes()).hexdigest()
+          sha2_raw=(out/'TSL.sha2').read_bytes()
+
+          assessment={
+            'evidence_type':'qualified_trust_service_status_from_archived_official_trusted_list',
+            'jurisdiction':'ES',
+            'official_snapshot_path':str(snap),
+            'official_snapshot_sha256':snap_sha,
+            'official_digest_source_url':'https://tsl.digital.gob.es/TSL.sha2',
+            'official_digest_file_sha256':hashlib.sha256(sha2_raw).hexdigest(),
+            'expected_official_snapshot_sha256':'4f85f15618537f1a36fa57402b4cbe4535e84c82df67155a238b94c3c7a66086',
+            'token_time_utc':token_time_s,
+            'provider_name_candidates':provider_names,
+            'service_target_name':target_name,
+            'service_type_identifier':service_type,
+            'current_service_status':current_status,
+            'current_status_starting_time':current_start,
+            'x509_subject_names':subjects,
+            'status_candidates':candidates,
+            'status_applicable_at_token_time':applicable,
+            'tspservice_fragment_sha256':frag_sha,
+            'classification':'QUALIFIED_STATUS_PROVEN_BY_ARCHIVED_OFFICIAL_TL_SNAPSHOT' if ('TSA/QTST' in (service_type or '') and (applicable.get('status') or '').lower().endswith('/granted')) else 'NOT_CLOSED',
+            'boundary':'This proves the official Trusted List snapshot and listed service status for the defined token time; it is not independent certification of N\'KEMBA or proof of institutional truth.'
+          }
+          (out/'SECTIGO_R35_QUALIFICATION_ASSESSMENT.json').write_text(json.dumps(assessment,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          if assessment['classification'] != 'QUALIFIED_STATUS_PROVEN_BY_ARCHIVED_OFFICIAL_TL_SNAPSHOT':
+              raise SystemExit(json.dumps(assessment,indent=2))
+          print(json.dumps(assessment,indent=2))
+          PY
+
+      - name: Commit closure evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add official-trusted-lists/es/2026-09-02/closure/
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: close Sectigo R35 qualified-status snapshot proof'
+          git push origin HEAD:main
