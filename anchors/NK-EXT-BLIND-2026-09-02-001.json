@@ -1,0 +1,11 @@
+{
+  "challenge_id": "NK-EXT-BLIND-2026-09-02-001",
+  "manifest_sha256": "ccb2dadb7e8f18fb7c1d0b572eb9bfffc97c1d957875bd7ef6f99b3605c741a4",
+  "file_count": 9,
+  "created_utc": "2026-09-02T19:31:00Z",
+  "statement": "Public anchoring of the blind challenge manifest digest only. No personal or confidential data.",
+  "limitations": [
+    "GitHub commit anchoring is not a qualified timestamp or qualified trust service.",
+    "Repository owner control means this is public third-party hosted evidence, not independent legal certification."
+  ]
+}
