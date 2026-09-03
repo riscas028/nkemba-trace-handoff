@@ -1,0 +1,74 @@
+[
+  {
+    "id": "NK-TRACE-CRYPTO-001",
+    "name": "full_consistent_chain",
+    "mutation": "none",
+    "expected": "PROVED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-002",
+    "name": "valid_trace_record_runtime_only",
+    "mutation": "runtime_only",
+    "expected": "NOT PROVED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-003",
+    "name": "tampered_trace_record",
+    "mutation": "tamper_trace",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-004",
+    "name": "unresolved_authority_reference",
+    "mutation": "unresolved_authority",
+    "expected": "NOT PROVED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-005",
+    "name": "resolved_authority_but_insufficient_limit",
+    "mutation": "insufficient_authority",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-006",
+    "name": "tampered_action_receipt",
+    "mutation": "tamper_receipt",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-007",
+    "name": "failed_external_outcome",
+    "mutation": "failed_outcome",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-008",
+    "name": "missing_external_outcome",
+    "mutation": "missing_outcome",
+    "expected": "NOT PROVED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-009",
+    "name": "superseded_operative_document",
+    "mutation": "superseded_document",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-010",
+    "name": "institutional_adoption_wrong_receipt",
+    "mutation": "wrong_adoption_receipt",
+    "expected": "CONTRADICTED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-011",
+    "name": "missing_institutional_adoption",
+    "mutation": "missing_adoption",
+    "expected": "NOT PROVED"
+  },
+  {
+    "id": "NK-TRACE-CRYPTO-012",
+    "name": "resolved_reference_digest_mismatch",
+    "mutation": "resolved_digest_mismatch",
+    "expected": "CONTRADICTED"
+  }
+]
