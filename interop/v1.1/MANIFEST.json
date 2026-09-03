@@ -1,0 +1,8 @@
+{
+  "artifact": "NKEMBA_v1.1_PUBLIC_COMPETING_CHAINS",
+  "vector_count": 14,
+  "branch": "nkemba-v1.1-competing-chains",
+  "runner": "python interop/v1.1/run_vectors.py",
+  "status": "public reproducibility candidate",
+  "scope": "synthetic controlled institutional-logic vectors; not TRACE conformance, certification, legal adjudication, or independent audit"
+}
