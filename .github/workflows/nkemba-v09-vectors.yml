@@ -1,0 +1,25 @@
+name: N'KEMBA v0.9 vector check
+
+on:
+  push:
+    paths:
+      - 'interop/v0.9/**'
+      - '.github/workflows/nkemba-v09-vectors.yml'
+  pull_request:
+    paths:
+      - 'interop/v0.9/**'
+      - '.github/workflows/nkemba-v09-vectors.yml'
+  workflow_dispatch:
+
+jobs:
+  vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -r interop/v0.9/requirements.txt
+      - name: Run falsification vectors
+        run: python interop/v0.9/run_vectors.py
