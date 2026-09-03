@@ -1,0 +1,25 @@
+name: N'KEMBA v1.1 competing-chain check
+
+on:
+  push:
+    branches:
+      - nkemba-v1.1-competing-chains
+    paths:
+      - 'interop/v1.1/**'
+      - '.github/workflows/nkemba-v11-competing-chains.yml'
+  pull_request:
+    paths:
+      - 'interop/v1.1/**'
+      - '.github/workflows/nkemba-v11-competing-chains.yml'
+  workflow_dispatch:
+
+jobs:
+  competing-chains:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run competing institutional chain vectors
+        run: python interop/v1.1/run_vectors.py
