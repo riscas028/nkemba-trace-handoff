@@ -41,9 +41,11 @@ Each future experimental card should preserve:
 
 ## Official source basis
 
-The current NVIDIA documentation states that provider profiles contribute provider-owned network policy to the sandbox effective policy, while the base policy remains separate; it also documents provider/profile updates and configuration synchronization. NVIDIA's current provider documentation describes unknown, malformed, expired, or unresolved credential placeholders as fail-closed rather than forwarded. citeturn0search0turn0search3
+The current NVIDIA documentation states that provider profiles contribute provider-owned network policy to the sandbox effective policy, while the base policy remains separate; it also documents provider/profile updates and configuration synchronization. NVIDIA's current provider documentation describes unknown, malformed, expired, or unresolved credential placeholders as fail-closed rather than forwarded. https://docs.nvidia.com/openshell/dev/how-it-works/providers/profiles
 
-GitHub's repository-content API supports creating and modifying repository files, which is the mechanism used to stage these publication artefacts. citeturn0search1
+https://docs.nvidia.com/openshell/latest/sandboxes/manage-providers
+
+GitHub's repository-content API supports creating and modifying repository files, which is the mechanism used to stage these publication artefacts. https://docs.github.com/en/rest/repos/contents
 
 ## Publication principle
 
