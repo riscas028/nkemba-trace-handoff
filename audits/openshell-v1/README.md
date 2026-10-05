@@ -23,6 +23,7 @@ The official NVIDIA/OpenShell repository is public and Apache-2.0 licensed. c
 - `METHODOLOGY.md`
 - `MATRIX-274.csv`
 - `SOURCES.md`
+- `POST-FREEZE-REFINEMENTS.md` — later refinements kept outside the frozen V1 corpus
 
 ## Publication rule
 
