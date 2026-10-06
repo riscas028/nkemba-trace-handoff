@@ -4,6 +4,8 @@ N’KEMBA Evidence Handoff is a minimal external-safe bridge for preserving veri
 
 ## Public independent audits
 
+**Commercial pilot:** [N’KEMBA Independent AI Audit — Commercial Pilot](COMMERCIAL-PILOT.md)
+
 N’KEMBA also publishes independent, evidence-bounded audits of AI runtime and governance systems. The current public audit covers NVIDIA OpenShell and reaches **#284**.
 
 - [NVIDIA OpenShell audit boundary](audits/nvidia-openshell/README.md)
