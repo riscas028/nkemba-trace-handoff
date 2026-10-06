@@ -49,7 +49,7 @@ The current published sequence reaches **#284**. #285 and subsequent experiments
 - Accessing Logs
 - Customize Sandbox Policies
 
-Official documentation was checked on 2026-10-05.
+Official documentation was checked on 2026-10-06.
 
 ## Important limitation
 
